@@ -11,8 +11,8 @@ function App() {
   const [photos,setPhotos] = useState();
   const [modalRedirectState,setModalRedirectState] = useState(false);
   const [modalHistoricState,setModalHistoricState] = useState(false);
-  const [redirectLink,setRedirectLink] = useState();
-  const [historic,setHistoric] = useState();
+  const [redirectLink,setRedirectLink] = useState('');
+  const [historic,setHistoric] = useState('[]');
   const [darkMode,setDarkMode] = useState(false);
 
   if (!localStorage.getItem('historic')){
@@ -75,7 +75,8 @@ function App() {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 400,
+    width: '70%',
+    maxWidth: 400,
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -162,7 +163,7 @@ function App() {
           <Typography id="modal-modal-description" style={{
             marginBottom: 30
           }}>
-            Você será redirecionado para <b>{redirectLink}</b>, deseja continuar?
+            Você será redirecionado para <b>{redirectLink.substring(0,25)}...</b>, deseja continuar?
           </Typography>
             <Button style={{
               marginRight: 10
@@ -197,13 +198,19 @@ function App() {
                 overflowY: 'scroll'
               }}>
               {
-                historic !== undefined ? JSON.parse(historic).map((h) => {
+                historic != '[]' ? JSON.parse(historic).map((h) => {
                   return (
                     <p key={Math.floor(Math.random() * 9999999)}>
                       <b>{'>'} </b> {h.pesquisa}
                     </p>
                   )
-                }) : false
+                }) : (() => {
+                  return (
+                    <p style={{opacity: .6}} key={Math.floor(Math.random() * 9999999)}>
+                      Nenhuma pesquisa encontrada.
+                    </p>
+                  )
+                })()
               }
             </div>
             <Button style={{marginRight: 10}} variant="contained" onClick={() => {
